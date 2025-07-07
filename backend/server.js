@@ -18,7 +18,7 @@ app.use(cors({
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.send('Note Taking App Backend Running');
+  res.send('Note Taking App new Backend Running');
 });
 
 createTables();
