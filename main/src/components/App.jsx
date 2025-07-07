@@ -6,6 +6,9 @@ import CreateArea from "./CreateArea";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+// Remove trailing slash from API base URL if present
+const API_BASE = import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "";
+
 function App() {
   const [notes, setNotes] = useState([]);
   const [error, setError] = useState("");
@@ -21,7 +24,7 @@ function App() {
       navigate("/login");
       return;
     }
-    axios.get("/api/notes", { headers: { Authorization: `Bearer ${token}` } })
+    axios.get(`${API_BASE}/api/notes`, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => setNotes(res.data))
       .catch(err => {
         if (err.response && err.response.status === 401) {
@@ -37,7 +40,7 @@ function App() {
   function addNote(newNote) {
     setError("");
     const token = getToken();
-    axios.post("/api/notes", newNote, { headers: { Authorization: `Bearer ${token}` } })
+    axios.post(`${API_BASE}/api/notes`, newNote, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => setNotes(prev => [res.data, ...prev]))
       .catch(() => setError("Failed to add note"));
   }
@@ -46,7 +49,7 @@ function App() {
   function deleteNote(id) {
     setError("");
     const token = getToken();
-    axios.delete(`/api/notes/${id}`, { headers: { Authorization: `Bearer ${token}` } })
+    axios.delete(`${API_BASE}/api/notes/${id}`, { headers: { Authorization: `Bearer ${token}` } })
       .then(() => setNotes(prev => prev.filter(note => note.id !== id)))
       .catch(() => setError("Failed to delete note"));
   }
